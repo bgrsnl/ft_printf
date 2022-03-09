@@ -1,23 +1,33 @@
-NAME	:= libftprintf.a
+NAME		= libftprintf.a
+INCLUDE		= include
+LIBFT		= libft
+CC			= gcc
+CFLAGS		= -Wall -Werror -Wextra
+RM			= rm -f
+AR			= ar rcs
 
-CC	:= gcc
+SRC	= $(wildcard *.c)
+OBJ = $(SRC:.c=.o)
 
-CFLAGS	:= -Wall -Wextra -Werror -I. -c
+all:		$(NAME)
 
-FILES	:= $(shell find . -type f -name “*.c”)
+$(NAME):	$(OBJ)
+			make -C $(LIBFT)
+			cp libft/libft.a .
+			mv libft.a $(NAME)
+			$(AR) $(NAME) $(OBJ)
 
-OBJ	:= $(FILES:%.c=%.o)
-
-all: $(NAME)
-$(NAME): $(OBJ)
-	ar -rc $(NAME) $(OBJ)
+%.o: %.c
+			@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	@rm -f *.o
+			rm -f *.o
+			make clean -C $(LIBFT)
 
-fclean: clean
-	@rm -f $(NAME)
+fclean:		clean
+			@$(RM) -f $(NAME)
+			@$(RM) -f $(LIBFT)/libft.a
 
-re: fclean all
+re:			fclean all
 
-.PHONY: all bonus clean fclean re
+.PHONY:		all clean fclean re
